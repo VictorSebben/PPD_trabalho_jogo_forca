@@ -9,13 +9,18 @@ import java.util.ArrayList;
 public class Jogo {
     private ArrayList<ControladorJogador> ctrlJogadores;
 
-    public Jogo(ArrayList<ControladorJogador> arr){
-        this.ctrlJogadores = arr;
+    public Jogo(){
+        this.ctrlJogadores = new ArrayList<>();
+    }
+
+    public void addCtrlJogador(ControladorJogador cj){
+        this.ctrlJogadores.add(cj);
+        // this.broadcastMsg(cj.getNome() + " entrou no jogo.");
     }
 
     public void broadcastMsg(String str){
         for(ControladorJogador cj : this.ctrlJogadores){
-            cj.enviaMensagem(str);
+            cj.enviaMensagem(cj.getSocket(), str);
         }
     }
 }

@@ -24,9 +24,12 @@ public class ControladorJogador implements Runnable {
     private boolean vivo; // se está ainda jogando ou já perdeu. Com seis erros, troca o vivo para false
     private int contEspera; // a quantas jogadas está esperando para jogar
 
-    public ControladorJogador(Socket socket){
-        estado = Estados.CONECTADO;
+    public ControladorJogador(Socket socket, Jogo jogo){
         this.socket = socket;
+        this.jogo = jogo;
+
+        estado = Estados.CONECTADO;
+
         estado = Estados.DESAUTENTICADO;
         this.vivo = true;
         this.contEspera = 0;
@@ -103,6 +106,20 @@ public class ControladorJogador implements Runnable {
         return this.nome;
     }
 
+    public Socket getSocket(){
+        return this.socket;
+    }
+
+    public void enviaMensagem(Socket socket, String msg){
+        try{
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            out.writeUTF(msg);
+        }
+        catch(IOException e){
+            System.out.println("ERRO: " + e);
+        }
+    }
+
     @Override
     public void run(){
         this.createStreams();
@@ -118,7 +135,7 @@ public class ControladorJogador implements Runnable {
                 case DESAUTENTICADO:
                     // parse da string do cliente
                     switch(msg[0]){
-                        case "LOGIN":
+                        case "LOGINREQUEST":
                             if((msg[1].equals("aluno")) && (msg[2].equals("ifsul"))){
                                 this.setNome(msg[1]);
                                 this.estado = Estados.AUTENTICADO;
@@ -130,7 +147,7 @@ public class ControladorJogador implements Runnable {
                                 this.enviaMensagem("Mensagem do servidor -> LOGINREPLY#REJECT");
                             break;
 
-                        case "EXIT":
+                        case "EXITREQUEST":
                             try{
                                 this.enviaMensagem("EXITREPLY#ACCEPT#Encerrando...");
                                 this.socket.close();
@@ -142,7 +159,7 @@ public class ControladorJogador implements Runnable {
                             break;
 
                         default:
-                            this.enviaMensagem("Mensagem do servidor -> COMANDO INVÁLIDO");
+                            this.enviaMensagem("Mensagem do servidor ->ERRO#COMANDO INVÁLIDO");
                     }
                     break;
 

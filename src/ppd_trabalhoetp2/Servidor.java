@@ -15,14 +15,11 @@ public class Servidor {
     private Integer porta;
     private ServerSocket server;
     private Jogo jogo;
-    private ArrayList<ControladorJogador> jogadores;
 
     public Servidor(Integer porta){
         this.porta = porta;
-        this.jogo = jogo;
-        jogadores = new ArrayList<>();
 
-        Jogo j = new Jogo(jogadores);
+        this.jogo = new Jogo();
     }
 
     public void criaServidor() throws IOException{
@@ -35,13 +32,12 @@ public class Servidor {
             System.out.println("Esperando conexão...");
             Socket socket = server.accept(); // até que alguém não tentar se conectar, para no accept()
 
-            ControladorJogador ctrlJogador = new ControladorJogador(socket);
+            ControladorJogador ctrlJogador = new ControladorJogador(socket, jogo);
 
             Thread t = new Thread(ctrlJogador);
             t.start();
 
-            // passar jogador para o jogo
-            this.jogadores.add(ctrlJogador);
+            this.jogo.addCtrlJogador(ctrlJogador);
         }
     }
 
