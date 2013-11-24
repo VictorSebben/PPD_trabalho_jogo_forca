@@ -51,13 +51,14 @@ public class Jogador {
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
         DataInputStream input = new DataInputStream(socket.getInputStream());
 
-        String msg = "";
+        String str = "";
         ComunicaCliente comCliente = new ComunicaCliente(this.socket);
         Thread t = new Thread(comCliente);
         t.start();
 
-        while(true){
-            String str = this.lerInput();
+        while(!str.startsWith("EXITREQUEST")){
+
+            str = this.lerInput();
             output.writeUTF(str);
 
             try{
@@ -67,10 +68,6 @@ public class Jogador {
                 System.out.println("Erro ao fazer thread nanar: " + e);
             }
 
-            if(msg.startsWith("EXITREPLY#ACCEPT")){
-                t.interrupt();
-                break;
-            }
         }
 
         socket.close();

@@ -30,13 +30,15 @@ public class ComunicaCliente implements Runnable {
 
     @Override
     public void run(){
-        while(true){
+        int flag = 1;
+
+        while(flag == 1){
             try{
                 this.ultimaMsg = input.readUTF();
                 System.out.println("Mensagem do servidor: " + ultimaMsg);
             }
             catch(IOException e){
-                System.out.println("Erro: ComunicaCliente.run() -> " + e);
+                flag = 0;
             }
         }
     }

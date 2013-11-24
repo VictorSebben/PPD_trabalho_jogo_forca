@@ -136,7 +136,7 @@ public class ControladorJogador implements Runnable {
                     // parse da string do cliente
                     switch(msg[0]){
                         case "LOGINREQUEST":
-                            if((msg[1].equals("aluno")) && (msg[2].equals("ifsul"))){
+                            if((msg[2].equals("ifsul"))){
                                 this.setNome(msg[1]);
                                 this.estado = Estados.AUTENTICADO;
                                 // TODO --> pegar o número de erros de acordo com quem está pior no jogo
