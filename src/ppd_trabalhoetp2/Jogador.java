@@ -51,12 +51,23 @@ public class Jogador {
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
         DataInputStream input = new DataInputStream(socket.getInputStream());
 
-        String msg = "";
-        while(!msg.startsWith("EXITREPLY#ACCEPT")){
-            String str = this.lerInput();
+        String str = "";
+        ComunicaCliente comCliente = new ComunicaCliente(this.socket);
+        Thread t = new Thread(comCliente);
+        t.start();
+
+        while(!str.startsWith("EXITREQUEST")){
+
+            str = this.lerInput();
             output.writeUTF(str);
-            msg = input.readUTF();
-            System.out.println("Mensagem do SERVER: " + msg);
+
+            try{
+                Thread.sleep(1000);
+            }
+            catch(InterruptedException e){
+                System.out.println("Erro ao fazer thread nanar: " + e);
+            }
+
         }
 
         socket.close();
