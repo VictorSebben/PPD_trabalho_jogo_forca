@@ -110,6 +110,20 @@ public class ControladorJogador implements Runnable {
         return this.socket;
     }
 
+    public Integer getContEspera(){
+        return this.contEspera;
+    }
+
+    public void setContEspera(int num){
+        this.contEspera = num;
+    }
+
+    protected void avisarVez(){
+        this.estado = Estados.SUAVEZ;
+        System.out.println("Avisou a vez!");
+        this.enviaMensagem("SUAVEZ");
+    }
+
     public void enviaMensagem(Socket socket, String msg){
         try{
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
@@ -138,9 +152,10 @@ public class ControladorJogador implements Runnable {
                         case "LOGINREQUEST":
                             if((msg[1].equals("aluno")) && (msg[2].equals("ifsul"))){
                                 this.setNome(msg[1]);
-                                this.estado = Estados.AUTENTICADO;
+                                this.estado = Estados.ESPERA;
                                 // TODO --> pegar o número de erros de acordo com quem está pior no jogo
                                 // e já colocar na mensagem de LOGINREPLY#ACCEPT.
+                                this.jogo.addCtrlJogador(this);
                                 this.enviaMensagem("Mensagem do servidor -> LOGINREPLY#ACCEPT#0#ERROS");
                             }
                             else
@@ -163,12 +178,43 @@ public class ControladorJogador implements Runnable {
                     }
                     break;
 
-                case AUTENTICADO:
+                case ESPERA:
                      switch(msg[0]){
-                        case "JOGAR":
-
+                        case "LOGOUTREQUEST":
+                            this.enviaMensagem("LOGOUTREPLY#ACCEPT");
+                            this.estado = Estados.DESAUTENTICADO;
                             break;
+
+                        case "EXITREQUEST":
+                            try{
+                                this.enviaMensagem("EXITREPLY#ACCEPT#Encerrando...");
+                                this.socket.close();
+                                this.estado = Estados.DESCONECTADO;
+                            }
+                            catch(IOException ex){
+                                System.out.println("Erro ao desconectar: " + ex.getMessage());
+                            }
+                            break;
+
+                        default:
+                            this.enviaMensagem("Mensagem do servidor -> ERRO#COMANDO INVÁLIDO");
                      }
+                     break;
+
+                case SUAVEZ:
+                    // é a vez do jogador jogar
+                    switch(msg[1])
+                    {
+                        case "JOGADA":
+                            //le a letra do jogador
+                            //testa jogada no jogo;
+                            //jogo.verificaTentativa(CARACTERJOGAODR)
+                            //se o jogador acertou mantem o estado
+                            //senão troca para espera
+                            break;
+
+                    }
+                    break;
             }
         }
     }
