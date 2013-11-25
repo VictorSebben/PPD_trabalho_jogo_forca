@@ -36,6 +36,7 @@ public class ComunicaCliente implements Runnable {
             try{
                 this.ultimaMsg = input.readUTF();
                 System.out.println("Mensagem do servidor: " + ultimaMsg);
+                System.out.print("->");
             }
             catch(IOException e){
                 flag = 0;

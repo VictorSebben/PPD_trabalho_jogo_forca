@@ -26,15 +26,20 @@ public class Jogo {
         if(ctrlJogadores.size() == 1)
             iniciarJogo();
 
-        defineProximoJogador();
-
-        // avisar jogador que é sua vez
-        jogadorAtual.avisarVez();
-        this.atualizaTempoDeEspera();
+        // avisar o jogador qual a palavra atual.
+        cj.enviaMensagem("Palavra: " + palavraAtual);
     }
 
     public void iniciarJogo(){
+        GeradorDePalavras gerador = new GeradorDePalavras("C:\\Users\\victor\\Documents\\NetBeansProjects\\PPD_TrabalhoEtp2\\src\\ppd_trabalhoetp2", "palavras.txt");
+        this.palavraAtual = gerador.getProximaPalavra();
+        this.dicaAtual = gerador.getDicaAtual();
+        this.tentativas = new ArrayList<>();
 
+        this.definirJogadorAtual();
+        // avisar jogador que é sua vez
+        jogadorAtual.avisarVez();
+        this.atualizaTempoDeEspera();
     }
 
     public void atualizaTempoDeEspera(){
@@ -44,21 +49,21 @@ public class Jogo {
         }
     }
 
-    public void defineProximoJogador(){
-        ControladorJogador maiorEspera;
+    public void definirJogadorAtual(){
+        ControladorJogador jogadorMaiorEspera;
 
         if(ctrlJogadores.isEmpty()){
             System.out.println("Sem jogadores!");
             return;
         }
 
-        maiorEspera = ctrlJogadores.get(0);
+        jogadorMaiorEspera = ctrlJogadores.get(0);
         for(int i = 1; i < ctrlJogadores.size(); i++){
-            if(ctrlJogadores.get(i).getContEspera() > maiorEspera.getContEspera())
-                maiorEspera = ctrlJogadores.get(i);
+            if(ctrlJogadores.get(i).getContEspera() > jogadorMaiorEspera.getContEspera())
+                jogadorMaiorEspera = ctrlJogadores.get(i);
         }
 
-        this.jogadorAtual = maiorEspera;
+        this.jogadorAtual = jogadorMaiorEspera;
         this.jogadorAtual.setContEspera(0);
     }
 

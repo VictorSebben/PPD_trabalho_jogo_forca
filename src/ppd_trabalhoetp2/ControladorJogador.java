@@ -106,6 +106,10 @@ public class ControladorJogador implements Runnable {
         return this.nome;
     }
 
+    public Estados getEstado(){
+        return this.estado;
+    }
+
     public Socket getSocket(){
         return this.socket;
     }
@@ -150,16 +154,16 @@ public class ControladorJogador implements Runnable {
                     // parse da string do cliente
                     switch(msg[0]){
                         case "LOGINREQUEST":
-                            if((msg[2].equals("ifsul"))){
+                            if(msg[2].equals("ifsul")){
                                 this.setNome(msg[1]);
                                 this.estado = Estados.ESPERA;
                                 // TODO --> pegar o número de erros de acordo com quem está pior no jogo
                                 // e já colocar na mensagem de LOGINREPLY#ACCEPT.
+                                this.enviaMensagem("LOGINREPLY#ACCEPT#0#ERROS");
                                 this.jogo.addCtrlJogador(this);
-                                this.enviaMensagem("Mensagem do servidor -> LOGINREPLY#ACCEPT#0#ERROS");
                             }
                             else
-                                this.enviaMensagem("Mensagem do servidor -> LOGINREPLY#REJECT");
+                                this.enviaMensagem("LOGINREPLY#REJECT");
                             break;
 
                         case "EXITREQUEST":
@@ -174,7 +178,7 @@ public class ControladorJogador implements Runnable {
                             break;
 
                         default:
-                            this.enviaMensagem("Mensagem do servidor ->ERRO#COMANDO INVALIDO");
+                            this.enviaMensagem("ERRO#COMANDO INVALIDO");
                     }
                     break;
 
@@ -197,15 +201,16 @@ public class ControladorJogador implements Runnable {
                             break;
 
                         default:
-                            this.enviaMensagem("Mensagem do servidor -> ERRO#COMANDO INVALIDO");
+                            this.enviaMensagem("ERRO#COMANDO INVALIDO");
                      }
                      break;
 
                 case SUAVEZ:
                     // é a vez do jogador jogar
-                    switch(msg[1])
+                    switch(msg[0])
                     {
-                        case "JOGADA":
+                        case "JOGAR":
+                            this.enviaMensagem("CEBOLA E CENOURA SÃO LEGAIS");
                             //le a letra do jogador
                             //testa jogada no jogo;
                             //jogo.verificaTentativa(CARACTERJOGAODR)
