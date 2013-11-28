@@ -1,3 +1,5 @@
+abc
+Dica: inicio do alfabeto.
 linux
 Dica: SO para quem é fera.
 wolverine

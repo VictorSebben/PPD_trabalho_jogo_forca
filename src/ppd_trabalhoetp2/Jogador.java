@@ -25,12 +25,12 @@ public class Jogador {
         this.porta = porta;
     }
 
-    //TODO --> adequar os métodos do cliente ao novo protocolo a ser implementado lá no Jogador (runnable)
+
     public String lerInput(){
         while(true){
             Scanner scanner = new Scanner(new InputStreamReader(System.in));
             System.out.print("Digite o comando no formato 'TIPO#param1#param2' ou ? para ajuda: \n->");
-            String str = scanner.nextLine();
+            String str = scanner.nextLine().toUpperCase();
 
             if(str.trim().equals("?")){
                 System.out.println("-------------------------------\nComandos:");
@@ -76,6 +76,7 @@ public class Jogador {
     public static void main(String args[])
     {
         Jogador c = new Jogador("localhost", 55555);
+
         try {
             c.comunicaServidor();
         } catch (IOException ex) {

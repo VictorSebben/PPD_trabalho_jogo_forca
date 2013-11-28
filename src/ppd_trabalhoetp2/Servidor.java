@@ -36,7 +36,6 @@ public class Servidor {
 
             Thread t = new Thread(ctrlJogador);
             t.start();
-
         }
     }
 

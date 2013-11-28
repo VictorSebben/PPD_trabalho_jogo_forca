@@ -25,8 +25,7 @@ public class GeradorDePalavras {
      *
      * @return a próxima palavra da lista, null se nao ha mais palavras;
      */
-    public String getProximaPalavra()
-    {
+    public String getProximaPalavra(){
 
         palavraAtual = leitor.getLine();
         dicaAtual = leitor.getLine();
